@@ -65,7 +65,7 @@ public class UserResource {
   //查询
   @GET
   @Path("{userName}")
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces(MediaType.APPLICATION_JSON)
   public User searchUserByName(@PathParam("userName") String userName) {
 	  User target = userMap.get(userName);
 	  
@@ -74,7 +74,7 @@ public class UserResource {
   
   //查询所有
   @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+  @Produces(MediaType.APPLICATION_JSON)
   public List<User> searchAllUsers() {
 	  List<User> temp = new ArrayList<User>();
 	  

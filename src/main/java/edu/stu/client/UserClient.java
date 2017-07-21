@@ -1,5 +1,7 @@
 package edu.stu.client;
 
+import java.lang.annotation.Target;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -13,11 +15,11 @@ import edu.stu.bean.User;
 
 //客户端调用接口流程：建立客户端、输入目标uri、构造相应符合request要求的response
 public class UserClient {
-    private static String serverUri = "http://localhost:8080/learJersey/rest";
+    private static String serverUri = "http://localhost:9009/learnJersey/rest";
     
     public static void main(String[] args) {
        addUser();
-       getAllUsers();
+       getUserByUsername("LIN");
     }  
     
     public static void addUser() {
@@ -31,14 +33,27 @@ public class UserClient {
     
     public static void getAllUsers() {
     	System.out.println("********搜索用户********");
-    	Client client = ClientBuilder.newClient();
-    	WebTarget target = client.target(serverUri+"/User/getUserJson");
+    	 Client client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
+    	WebTarget target = client.target(serverUri+"/User");
     	Response response = target.request().get();
-//    	String value = response.readEntity(String.class);
-//    	System.out.println(value);
+    	System.out.println(response.readEntity(String.class));
     	response.close();
     }
-       
+    
+    public static void getUserByUsername(String username) {
+    	System.out.println("********查询某个用户********");
+    	Client client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
+    	WebTarget target = client.target(serverUri+"/User/"+username);
+    	Response response = target.request().get();
+    	String value = response.readEntity(String.class);
+    	
+    	if (value.equals(""))
+    		System.out.println("No exist");
+    	else
+    	    System.out.println(value);
+    	
+    	response.close();
+    }
 }  
     
     
