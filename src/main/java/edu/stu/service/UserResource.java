@@ -21,24 +21,6 @@ import edu.stu.bean.User;
 public class UserResource {
   private static Map<String, User> userMap = new HashMap<String, User>();
   
-  @GET
-  @Produces(MediaType.APPLICATION_XML)
-  public List<User> getAllUsers() {
-	  List<User> users = new ArrayList<User>();
-	  
-	  User u1 = new User(1, "Lin", "STU,SHANTOU");
-	  User u2 = new User(2, "Lee", "GC,FOSHAN");
-	  User u3 = new User(3, "Leung", "ZM,GUANZHOU");
-	  
-	  userMap.put(u1.getUserName(), u1);
-	  userMap.put(u2.getUserName(), u2);
-	  userMap.put(u3.getUserName(), u3);
-	  
-	  users.addAll(userMap.values());
-	  
-	  return users;
-  }
-  
   @GET  
   @Path("/getUserXml")  
   @Produces(MediaType.APPLICATION_XML)  
