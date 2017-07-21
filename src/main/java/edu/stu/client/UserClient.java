@@ -23,10 +23,11 @@ public class UserClient {
     private static String serverUri = "http://localhost:9009/learnJersey/rest";
     
     public static void main(String[] args) {
-//       User user = new User(26, "Leung", "CC,FOSHAN");
+       User user = new User(26, "Linx", "CC,FOSHAN");
 //       addUser(user);
 //    	getUserById(26);
-    	deleteUser(25);
+//    	deleteUser(25);
+    	updateUser(user);
     }  
       
     public static void getUserById(int id) {
@@ -54,6 +55,13 @@ public class UserClient {
     	Client client = ClientBuilder.newClient();
     	WebTarget target = client.target(serverUri+"/User/"+id);
     	Response response = target.request().delete();
+    	response.close();
+    }
+    
+    public static void updateUser(User user) {
+    	Client client = ClientBuilder.newClient().register(JacksonJsonProvider.class); 
+    	WebTarget target = client.target(serverUri+"/User");
+    	Response response = target.request().buildPut(Entity.entity(user, MediaType.APPLICATION_JSON)).invoke();
     	response.close();
     }
 }  

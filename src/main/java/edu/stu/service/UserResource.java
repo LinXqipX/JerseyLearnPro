@@ -63,21 +63,20 @@ public class UserResource {
   
   //修改用户
   @PUT
-  @Consumes(MediaType.APPLICATION_XML)
+  @Consumes(MediaType.APPLICATION_JSON)
   public void updateUser(User user) {
-	  userMap.put(user.getUserName(), user);
-  }
-  
-  //查询
-  @GET
-  @Path("/username/{userName}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public User searchUserByName(@PathParam("userName") String userName) {
-	  User target = userMap.get(userName);
+	  SqlSession session = SqlUtil.createSqlSession();
 	  
-	  return target;
+	  try {
+		  UserOperation userOperation = session.getMapper(UserOperation.class);
+		  userOperation.updateOneUser(user);
+		  session.commit();
+	  } finally {
+		  session.close();
+	  }
   }
   
+  //查询用户 
   @GET
   @Path("{id}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -96,13 +95,4 @@ public class UserResource {
 	  return user;
   }
   
-  //查询所有
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public List<User> searchAllUsers() {
-	  List<User> temp = new ArrayList<User>();
-	  
-	  temp.addAll(userMap.values());
-	  return temp;
-  }
 }

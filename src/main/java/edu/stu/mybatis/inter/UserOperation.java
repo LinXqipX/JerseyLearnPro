@@ -6,4 +6,5 @@ public interface UserOperation {
     public User seletctUserById(int id);
     public void addOneUser(User user);
     public void deleteOneUserById(int id);
+    public void updateOneUser(User user);
 }

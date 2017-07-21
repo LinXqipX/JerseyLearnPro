@@ -16,4 +16,8 @@
         delete from UserForm where id = #{id}
     </delete>
     
+    <update id="updateOneUser" parameterType="User">
+        update UserForm set userName = #{userName}, userAddress = #{userAddress}
+                             where id = #{id}
+    </update>
 </mapper>
