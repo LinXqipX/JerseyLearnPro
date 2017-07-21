@@ -1,5 +1,8 @@
 package edu.stu.service;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,45 +17,48 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import edu.stu.bean.User;
+import edu.stu.mybatis.inter.UserOperation;
+import edu.stu.tool.SqlUtil;
+import edu.stu.tool.XmlUtil;
 
 @Path("/User")
 public class UserResource {
   private static Map<String, User> userMap = new HashMap<String, User>();
   
-  @GET  
-  @Path("/getUserXml")  
-  @Produces(MediaType.APPLICATION_XML)  
-  public User getUserXml() {  
-   User user  = new User();  
-   user.setId(4);  
-   user.setUserName("Amand");  
-   return user;  
-  }
-  
-  @GET
-  @Path("/getUserJson")
-  @Produces(MediaType.APPLICATION_JSON)
-  public User getUserJson() {
-	  User user = new User();
-	  user.setId(5);
-	  user.setUserName("JsonAmand");
-	  return user;
-  }
-  
   //添加用户
   @POST
-  @Consumes(MediaType.APPLICATION_XML)
+  @Consumes(MediaType.APPLICATION_JSON)
   public void addUser(User user) {
-	  userMap.put(user.getUserName(), user);
+	  SqlSession session = SqlUtil.createSqlSession();
+	  try {
+		  UserOperation userOperation = session.getMapper(UserOperation.class);
+		  userOperation.addOneUser(user);
+		  session.commit();
+	  } finally {
+		  session.close();
+	  }
   }
   
   //删除用户
   @DELETE
-  @Path("{userName}")
-  public void deleteUser(@PathParam("userName") String userName) {
-	  userMap.remove(userName);
+  @Path("{id}")
+  public void deleteUser(@PathParam("id") int id) {
+	  SqlSession session = SqlUtil.createSqlSession();
+	  try {
+		  UserOperation userOperation = session.getMapper(UserOperation.class);
+		  userOperation.deleteOneUserById(id);
+		  session.commit();
+	  } finally {
+		  session.close();
+	  }
   }
   
   //修改用户
@@ -64,12 +70,30 @@ public class UserResource {
   
   //查询
   @GET
-  @Path("{userName}")
+  @Path("/username/{userName}")
   @Produces(MediaType.APPLICATION_JSON)
   public User searchUserByName(@PathParam("userName") String userName) {
 	  User target = userMap.get(userName);
 	  
 	  return target;
+  }
+  
+  @GET
+  @Path("{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public User searchUserById(@PathParam("id") int id) {
+	  SqlSession session = SqlUtil.createSqlSession();
+	  User user;
+	  
+	  try{
+		  UserOperation userOperation = session.getMapper(UserOperation.class);
+		  user = userOperation.seletctUserById(id);
+	  } finally{
+		  session.close();
+	  }
+	  
+	  System.out.println(id);
+	  return user;
   }
   
   //查询所有

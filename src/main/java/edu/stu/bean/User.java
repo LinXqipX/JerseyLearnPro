@@ -18,6 +18,7 @@ public class User {
 	this.userAddress = userAddress;
   }
   
+  @XmlTransient
   public int getId(){
 	  return id;
   }
@@ -26,6 +27,7 @@ public class User {
 	  this.id = id;
   }
   
+  @XmlTransient
   public String getUserName(){
 	  return userName;
   }
@@ -34,6 +36,7 @@ public class User {
 	  this.userName = userName;
   }
   
+  @XmlTransient
   public String getUserAddress() {
 	  return userAddress;
   }
